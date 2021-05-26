@@ -172,6 +172,7 @@ To github.com:GotWind/Python-Manual.git
 ```
 
 # 4.下载远程master分支，修改代码后提交到master
+注意，自己笔记本是选项 -o machrive 笔记本的虚拟机是 -o vm  额外的还有 -o ts
 ```
 aleny@Aleny:~$ git clone -o vm git@github.com:GotWind/note.git
 aleny@Aleny:~$ cd note/
@@ -196,4 +197,41 @@ aleny@Aleny:~/note$ git branch -a
 aleny@Aleny:~/note$ git fetch -p
 来自 github.com:GotWind/note
  - [已删除]          （无）  -> vm/main
+```
+
+# 6.生成patch和使用patch
+注意在生成patch和使用patch的过程中包含三次提交  
+(1)初始化仓库新建文件并提交一次
+```
+git init 
+vim data/111.log
+git add --all
+git commit -m "1st commit"
+```
+(2)修改过后再提交一次
+```
+vim data/222.log
+git add --all
+git commit -m "2nd commit"
+```
+(3)前面已经有两次提交了，可以通过前面的两次提交生成一个patch
+```
+git format-patch HEAD^
+```
+(4)撤销第二次的修改(在其他地方可能只有第一次提交，即恢复到第一次提交的状态)
+```
+rm data/222.log
+git commit -m "3rd commit"
+```
+(5)使用patch  
+```
+(a)下面这一条会验证patch是否可用，不可用会有打印信息  
+git apply --check 0001-2021-05-26-11-32-30-2nd-commoit.patch  
+(b)直接将patch文件的内容打到对应的版本中  
+git am 0001-2021-05-26-11-32-30-2nd-commoit.patch
+```
+
+(6)注意：对于使用git diff生成的patch需要直接apply，与上面的方式不一样
+```
+git apply xxx.patch
 ```
